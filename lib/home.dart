@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes/add_screen.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -23,42 +24,28 @@ class _HomeState extends State<Home> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: controller,
-              decoration: const InputDecoration(
-                hintText: 'Write Your Note Here',
-                border: OutlineInputBorder(borderSide: BorderSide(width: 2)),
-              ),
-              onEditingComplete: () {
-                setState(() {
-                  notes.add(controller.text);
-                  controller.clear();
-                });
-              },
-            ),
-            Expanded(
-              child: ListView(
-                children: [
-                  ...List.generate(
-                    notes.length,
-                    (index) => Card(
-                      color: Colors.amber,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          notes[index],
-                          style: const TextStyle(fontSize: 24),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
+        child: ListView.builder(
+            itemCount: 7,
+            itemBuilder: ((context, index) {
+              return ListTile(
+                  leading: CircleAvatar(
+                    child: Text('$index'),
+                  ),
+                  title: const Text('Title'),
+                  subtitle: const Text('Description'),
+                  trailing: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.delete_forever_outlined),
+                  ));
+            })),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => const AddScreen()));
+        },
+        child: const Icon(Icons.add),
+        backgroundColor: Colors.blue,
       ),
     );
   }
