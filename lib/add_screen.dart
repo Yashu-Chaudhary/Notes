@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:notes/notes_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddScreen extends StatefulWidget {
   const AddScreen({super.key});
@@ -9,7 +13,25 @@ class AddScreen extends StatefulWidget {
 
 class _AddScreenState extends State<AddScreen> {
   TextEditingController titleController = TextEditingController();
-  TextEditingController discriptionController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+
+  List<Notes> list = [];
+  late SharedPreferences sharedPreferences;
+
+  getData() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    List<String>? stringList = sharedPreferences.getStringList('list');
+    if (stringList != null) {
+      list =
+          stringList.map((item) => Notes.fromMap(json.decode(item))).toList();
+    }
+  }
+
+  @override
+  void initState() {
+    getData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,33 +64,44 @@ class _AddScreenState extends State<AddScreen> {
                     decoration: const InputDecoration(
                         hintText: 'Title',
                         hintStyle: TextStyle(color: Colors.black45),
-                        border: InputBorder.none
-                        ),
+                        border: InputBorder.none),
                   ),
                   TextField(
-                    controller: discriptionController,
+                    controller: descriptionController,
                     maxLines: 5,
                     decoration: const InputDecoration(
                         hintText: 'Discription',
                         hintStyle: TextStyle(color: Colors.grey),
-                        border: InputBorder.none
-                        ),
+                        border: InputBorder.none),
                   ),
                 ],
               ),
             ),
-            Container(
-              height: 40,
-              width: double.infinity,
-              margin: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.blue,
-              ),
-              child: const Center(
-                child: Text(
-                  'Save',
-                  style: TextStyle(color: Colors.white),
+            InkWell(
+              onTap: () {
+                list.insert(
+                    0,
+                    Notes(
+                        title: titleController.text,
+                        description: descriptionController.text));
+                List<String> strList =
+                    list.map((item) => json.encode(item.toMap())).toList();
+                sharedPreferences.setStringList('list', strList);
+                Navigator.pop(context, "loadData");
+              },
+              child: Container(
+                height: 40,
+                width: double.infinity,
+                margin: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.blue,
+                ),
+                child: const Center(
+                  child: Text(
+                    'Save',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             )
