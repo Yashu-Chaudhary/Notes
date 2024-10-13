@@ -44,6 +44,7 @@ class _AddScreenState extends State<AddScreen> {
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.blue,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         child: Column(

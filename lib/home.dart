@@ -86,7 +86,7 @@ class _HomeState extends State<Home> {
           }
         },
         backgroundColor: Colors.blue,
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white,),
       ),
     );
   }
